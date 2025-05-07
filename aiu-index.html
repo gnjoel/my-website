@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>APIU Student Connect</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        header {
+            background-color: #003366;
+            color: white;
+            padding: 1em;
+            text-align: center;
+        }
+        main {
+            padding: 1em;
+        }
+        .section {
+            background-color: white;
+            padding: 1em;
+            margin-bottom: 1em;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        label {
+            display: block;
+            margin-bottom: 0.2em;
+            font-size: 0.8em;
+        }
+        input, select {
+            display: block;
+            width: auto;              /* shrink to fit or adjust as needed */
+            padding: 0.2em 0.5em;     /* smaller padding */
+            font-size: 0.8em;         /* smaller text */
+            margin-bottom: 0.5em;
+        }
+        button {
+            background-color: #003366;
+            color: white;
+            padding: 0.2em 0.5em;
+            font-size: 0.8em;
+            width: auto;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0055a5;
+        }
+        #appContent { display: none; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>APIU Student Connect</h1>
+    </header>
+    <main>
+        <div class="section" id="authSection">
+            <h2>Sign Up</h2>
+            <label for="signupUsername">Username:</label>
+            <input type="text" id="signupUsername">
+            <label for="signupPassword">Password:</label>
+            <input type="password" id="signupPassword">
+            <button onclick="signUp()">Sign Up</button>
+
+            <h2>Log In</h2>
+            <label for="loginUsername">Username:</label>
+            <input type="text" id="loginUsername">
+            <label for="loginPassword">Password:</label>
+            <input type="password" id="loginPassword">
+            <button onclick="logIn()">Log In</button>
+            <p id="authMessage"></p>
+        </div>
+
+        <div id="appContent">
+            <div class="section">
+                <h2>Register for a Course</h2>
+                <label for="courseSelect">Select a course:</label>
+                <select id="courseSelect">
+                    <option value="CSCI101">CSCI101 - Intro to Programming</option>
+                    <option value="CSCI305">CSCI305 - Software Engineering</option>
+                    <option value="MATH210">MATH210 - Calculus II</option>
+                    <option value="ENG101">ENG101 - Academic Writing</option>
+                </select>
+                <button onclick="registerCourse()">Register</button>
+                <p id="registerMessage"></p>
+            </div>
+
+            <div class="section">
+                <h2>View Class Schedule</h2>
+                <button onclick="viewSchedule()">Show My Schedule</button>
+                <ul id="scheduleList"></ul>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const schedule = [
+            { course: 'CSCI101 - Intro to Programming', time: 'Mon 10:00 - 12:00' },
+            { course: 'CSCI305 - Software Engineering', time: 'Tue 14:00 - 16:00' },
+            { course: 'MATH210 - Calculus II', time: 'Wed 09:00 - 11:00' },
+            { course: 'ENG101 - Academic Writing', time: 'Fri 13:00 - 15:00' }
+        ];
+
+        function signUp() {
+            const username = document.getElementById('signupUsername').value;
+            const password = document.getElementById('signupPassword').value;
+            if (username && password) {
+                if (localStorage.getItem(username)) {
+                    document.getElementById('authMessage').textContent = 'Username already exists.';
+                } else {
+                    localStorage.setItem(username, password);
+                    document.getElementById('authMessage').textContent = 'Sign up successful! Please log in.';
+                }
+            } else {
+                document.getElementById('authMessage').textContent = 'Please enter a username and password.';
+            }
+        }
+
+        function logIn() {
+            const username = document.getElementById('loginUsername').value;
+            const password = document.getElementById('loginPassword').value;
+            const storedPassword = localStorage.getItem(username);
+            if (storedPassword && storedPassword === password) {
+                document.getElementById('authMessage').textContent = `Welcome, ${username}!`;
+                document.getElementById('authSection').style.display = 'none';
+                document.getElementById('appContent').style.display = 'block';
+            } else {
+                document.getElementById('authMessage').textContent = 'Invalid username or password.';
+            }
+        }
+
+        function registerCourse() {
+            const course = document.getElementById('courseSelect').value;
+            document.getElementById('registerMessage').textContent = `Successfully registered for ${course}!`;
+        }
+
+        function viewSchedule() {
+            const list = document.getElementById('scheduleList');
+            list.innerHTML = '';
+            schedule.forEach(item => {
+                const li = document.createElement('li');
+                li.textContent = `${item.course} - ${item.time}`;
+                list.appendChild(li);
+            });
+        }
+    </script>
+</body>
+</html>
